@@ -1,101 +1,161 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState } from 'react'
+import Question from '@/components/Question'
+import Results from '@/components/Results'
+
+const questions = [
+  {
+    question: 'ECサイトにおいてセキュリティ対策を怠った場合に発生し得る主な損害はどれですか？',
+    options: [
+      'サイト運営費の削減',
+      '売上高の大幅な減少と信用失墜',
+      '顧客からの返品率増加',
+      'サーバーの容量不足'
+    ],
+    correctAnswer: 1,
+    explanation: 'セキュリティ事故は経済的損失や信用低下を引き起こします。',
+    page: 'p.1-2',
+  },
+  {
+    question: '2021年の国内クレジットカードの年間不正利用被害総額はおおよそいくらですか？',
+    options: [
+      '142億円',
+      '240億円',
+      '330億円',
+      '500億円'
+    ],
+    correctAnswer: 2,
+    explanation: 'クレジットカード不正利用被害の主な原因は番号盗用によるものです。',
+    page: 'p.9',
+  },
+  {
+    question: 'ECサイトがサイバー攻撃の標的になる主な理由として正しいものはどれですか？',
+    options: [
+      'サイト運営者が少ないため',
+      'セキュリティ対策が不十分なサイトが多いため',
+      '利用者が減少しているため',
+      'サーバーのコストが高いため'
+    ],
+    correctAnswer: 1,
+    explanation: '攻撃者はセキュリティの弱いサイトを標的とします。',
+    page: 'P.9-10',
+  },
+  {
+    question: 'IPA調査によると、セキュリティ対策が不十分な自社構築サイトの割合は何%ですか？',
+    options: [
+      '28%',
+      '42%',
+      '52%',
+      '67%'
+    ],
+    correctAnswer: 2,
+    explanation: '脆弱性診断により危険度「高」が多数確認されています。',
+    page: 'p.12',
+  },
+  {
+    question: 'ECサイトの構築時において、「必須」とされるセキュリティ対策に含まれないものはどれですか？',
+    options: [
+      '管理画面のアクセス制限',
+      'TLSの利用',
+      '二要素認証の導入',
+      '脆弱性診断'
+    ],
+    correctAnswer: 2,
+    explanation: '二要素認証は「必要」とされます。',
+    page: 'p.26',
+  },
+  {
+    question: '被害を受けたECサイト運営事業者の約何%がSaaS型サービスまたはモール型サービスに移行しましたか？',
+    options: [
+      '14%',
+      '35%',
+      '52%',
+      '66%'
+    ],
+    correctAnswer: 2,
+    explanation: '被害後、多くの事業者が別形態へ移行しています。',
+    page: 'p.17',
+  },
+  {
+    question: 'セキュリティ対策が不十分な場合に取るべき「応急処置」として正しいものはどれですか？',
+    options: [
+      'サーバーの増設',
+      'WAFの導入やサイバー保険への加入',
+      '広告費の削減',
+      '顧客への割引サービス実施'
+    ],
+    correctAnswer: 1,
+    explanation: '応急処置としてリスク軽減策を講じます。',
+    page: 'p.22',
+  },
+  {
+    question: '「外部委託先にセキュリティ運用を依頼する場合」に求められる重要な事項は何ですか？',
+    options: [
+      '契約書にセキュリティ要件を明記すること',
+      '外部委託先の裁量に任せること',
+      'サービス提供範囲を広げること',
+      '予算を削減すること'
+    ],
+    correctAnswer: 0,
+    explanation: '契約時に要件を明示することが重要です。',
+    page: 'p.22',
+  },
+  {
+    question: 'ECサイトのセキュリティ対策における「トータルコスト」に含まれないものはどれですか？',
+    options: [
+      'サイト構築費用',
+      '運用・保守コスト',
+      'サイバー攻撃の被害額',
+      'セキュリティアップデート費用'
+    ],
+    correctAnswer: 2,
+    explanation: 'トータルコストは予防的費用を指します。',
+    page: 'p.21',
+  },
+  {
+    question: '「管理者画面へのログイン認証」が原因となるセキュリティ問題として正しいものはどれですか？',
+    options: [
+      'デフォルト設定のまま使用すること',
+      '管理者の人数が多いこと',
+      'パスワードを複雑化すること',
+      'IPアドレスのホワイトリストを設定すること'
+    ],
+    correctAnswer: 0,
+    explanation: '設定不備や脆弱性は攻撃の対象となります。',
+    page: 'p.18',
+  }
+]
+
+export default function Quiz() {
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [userAnswers, setUserAnswers] = useState<number[]>([])
+  const [showResults, setShowResults] = useState(false)
+
+  const handleAnswer = (answerIndex: number) => {
+    setUserAnswers([...userAnswers, answerIndex])
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+    } else {
+      setShowResults(true)
+    }
+  }
+
+  if (showResults) {
+    return <Results questions={questions} userAnswers={userAnswers} />
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
+        <h1 className="text-2xl font-bold mb-6 text-center">理解度チェックテスト</h1>
+        <Question
+          questionData={questions[currentQuestion]}
+          questionNumber={currentQuestion + 1}
+          onAnswer={handleAnswer}
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
-  );
+  )
 }
+
